@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Location</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        #p1 {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            width: 300px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>My Location</h1>
+    <p id="p1">Your location will be displayed here.</p>
+    <button onclick="locate()">Click here to know your current location</button>
+
+    <script>
+        let p1 = document.getElementById("p1");
+        function locate() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(anku);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+        function anku(s) {
+            p1.innerHTML = "Latitude: " + s.coords.latitude + "<br>Longitude: " + s.coords.longitude;
+            var l = "https://api.opencagedata.com/geocode/v1/json?q=" + s.coords.latitude + "," + s.coords.longitude + "&key=87f70e732bbd44d984f351fc57d3e4cc";
+            $.get({
+                url: l,
+                success: function(e) {
+                    p1.innerHTML = "<br>Country: " + e.results[0].components.country + "<br>";
+                    p1.innerHTML += "City: " + e.results[0].components.city + "<br>";
+                    p1.innerHTML += "State: " + e.results[0].components.state;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
